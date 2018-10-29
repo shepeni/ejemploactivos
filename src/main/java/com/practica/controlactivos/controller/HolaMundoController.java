@@ -5,20 +5,21 @@
  */
 package com.practica.controlactivos.controller;
 
+import com.practica.controlactivos.dto.UserDTO;
 import com.practica.controlactivos.model.User;
 import com.practica.controlactivos.service.SaludoService;
+import com.practica.controlactivos.service.UserService;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -33,28 +34,54 @@ public class HolaMundoController {
     Logger logger = Logger.getLogger(HolaMundoController.class.getName());
     
     private SaludoService saludoService;
+    private UserService userService;
 
     @Autowired
     public void setSaludoService(SaludoService saludoService) {
         this.saludoService = saludoService;
     }
+
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
     
-    @GetMapping("/hola/{nombre}/{paterno}")
-    public Map<String, Object> hola( @PathVariable("nombre") String nombre,
-        @PathVariable("paterno") String paterno,
-        @RequestParam("titulo") String titulo){
+    
+    
+    @GetMapping("")
+    public List<User> hola(){
         
         logger.log(Level.FINE, "En el metodo Get del Controlador");
-        return saludoService.getInfoUser(nombre, paterno, titulo);
+        return userService.getUsers();
+    }
+    
+    @GetMapping("/resume")
+    public List<UserDTO> getUsersResume(){
+        
+        logger.log(Level.FINE, "En el metodo Get del Controlador");
+        return userService.getUserList();
+    }
+    
+    @GetMapping("{id}")
+    public User getUser(@PathVariable("id") Long  id){
+        
+        logger.log(Level.FINE, "En el metodo Get del Controlador");
+        User user = (User) userService.getUser(id);
+        return user;
     }
     
     @PostMapping()
-    public List<User> createUser(@RequestBody List<User> users){
+    public List<User> createUser(@RequestBody List<User> users)throws Exception{
         
         for(User user: users){
-            user.setName(user.getName().toUpperCase());
+            userService.save(user);
         }
-        
         return users;
+    }
+    
+    @DeleteMapping("{id}")
+    public String deleteObject(@PathVariable("id") Long id){
+        userService.delete(id);
+        return "Objeto eliminado";
     }
 }
