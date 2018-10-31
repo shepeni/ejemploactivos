@@ -9,6 +9,11 @@ import com.practica.controlactivos.dto.UserDTO;
 import com.practica.controlactivos.model.User;
 import com.practica.controlactivos.service.SaludoService;
 import com.practica.controlactivos.service.UserService;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Base64;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -84,4 +89,21 @@ public class HolaMundoController {
         userService.delete(id);
         return "Objeto eliminado";
     }
+	
+	@PostMapping("imagen")
+	public String saveImage(@RequestBody UserDTO user){
+		
+		try {
+			byte[] imagen = Base64.getDecoder().decode(user.getImage());
+			Path destinationFile = Paths.get("/imagenesEjercicio", "myImage.jpg");
+			Files.createDirectories(destinationFile.getParent());
+			Files.write(destinationFile, imagen);
+		} catch (IOException ex) {
+			Logger.getLogger(HolaMundoController.class.getName()).log(Level.SEVERE, null, ex);
+			return "No guardado";
+		}
+		
+		return "Guardado";
+		
+	}
 }

@@ -13,6 +13,7 @@ public class UserDTO {
     private String name;
     private String lastName;
     private String placeName; 
+	private String image;
 
     public String getName() {
         return name;
@@ -37,6 +38,16 @@ public class UserDTO {
     public void setPlaceName(String placeName) {
         this.placeName = placeName;
     }
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
+	
+	
     
     
 }
