@@ -1,0 +1,3 @@
+Ejecutar el script oauth_schema.sql en la base de datos
+Habilitar la propiedad recreateDatabase a true para ejecutar la insercion del cliente en la base de datos
+Ejecutar el endpoint de creacion del usuario administrador

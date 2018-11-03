@@ -11,6 +11,7 @@ import com.practica.controlactivos.service.UserService;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import org.aspectj.weaver.bcel.LazyClassGen;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.ProjectionList;
@@ -29,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author Omar
  */
 @Service
+@Transactional
 public class UserServiceImpl implements UserService, UserDetailsService{
 
     @PersistenceContext
@@ -94,7 +96,14 @@ public class UserServiceImpl implements UserService, UserDetailsService{
         
         Criteria crit = session.createCriteria(User.class);
         crit.add(Restrictions.eq("userName", userName));
-	return loadUserByUsername(userName);
+	crit.createAlias("roles", "roles", JoinType.LEFT_OUTER_JOIN);
+	List<UserDetails> results =  crit.list();
+	if(results.size()==0){
+	    throw new UsernameNotFoundException("The user doesn't exists");
+	}
+	return results.get(0);
     }
+
+   
     
 }
