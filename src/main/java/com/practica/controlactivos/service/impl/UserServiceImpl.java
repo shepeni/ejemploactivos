@@ -9,17 +9,18 @@ import com.practica.controlactivos.dto.UserDTO;
 import com.practica.controlactivos.model.User;
 import com.practica.controlactivos.service.UserService;
 import java.util.List;
-import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
-import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.sql.JoinType;
 import org.hibernate.transform.AliasToBeanResultTransformer;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,7 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author Omar
  */
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService, UserDetailsService{
 
     @PersistenceContext
     EntityManager entityManager;
@@ -84,6 +85,16 @@ public class UserServiceImpl implements UserService{
         crit.setResultTransformer(new AliasToBeanResultTransformer(UserDTO.class));
         
         return crit.list();
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
+	Session session = entityManager.unwrap(Session.class);
+        
+        
+        Criteria crit = session.createCriteria(User.class);
+        crit.add(Restrictions.eq("userName", userName));
+	return loadUserByUsername(userName);
     }
     
 }
