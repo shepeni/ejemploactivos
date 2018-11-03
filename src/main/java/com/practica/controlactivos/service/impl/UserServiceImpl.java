@@ -11,7 +11,6 @@ import com.practica.controlactivos.service.UserService;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import org.aspectj.weaver.bcel.LazyClassGen;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.ProjectionList;

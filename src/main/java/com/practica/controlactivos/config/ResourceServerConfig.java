@@ -34,7 +34,7 @@ public class ResourceServerConfig {
         public void configure(HttpSecurity http) throws Exception {
             http
 		.authorizeRequests()					
-		    .antMatchers("/api/user/**").authenticated()
+		    .antMatchers("/api/**").authenticated()
 		.and()
 		    .exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler());
         }
